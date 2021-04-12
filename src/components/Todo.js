@@ -27,6 +27,13 @@ function Todo() {
     /* テストコード 終了 */
   ]);
   
+  const [tab, setTab] = useState('ALL')
+
+  const filteredItems = items.filter( item => {
+    if (tab === 'ALL') return true;
+    if (tab === 'DOING') return !item.done;
+    if (tab === 'DONE') return item.done;
+  });
   
   const completeTask = (checkedItem) => {
     const newItems = items.map(item => {
@@ -45,14 +52,19 @@ function Todo() {
     putItems(newItems)
   }
 
+  const selectTab = value => {
+    setTab(value)
+  }
+
   return (
     <div className="panel">
       <div className="panel-heading">
         ITSS ToDoアプリ
       </div>
-      <Input addNewItem={addItem}/>
-      {items.map(item => (
-        <TodoItem key={item.key} item={item} checkItem={completeTask} />
+      <Input addNewItem={addItem} />
+      <Filter value={tab} changeTab={selectTab} />
+        {filteredItems.map(item => (
+          <TodoItem key={item.key} item={item} checkItem={completeTask} />
       ))}
       <div className="panel-block">
         {items.length} items
